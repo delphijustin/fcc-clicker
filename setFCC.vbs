@@ -20,7 +20,6 @@ WScript.Echo "Usage: setFCC.vbs <Modes>" & vbCrLf & "Modes:" & vbCrLf & "H     M
 WScript.Quit 0
 end if
 modes=""
-delmodes=false
 Dim i
 For i = 0 To argCount - 1     
 modes=modes&WScript.Arguments(i)
