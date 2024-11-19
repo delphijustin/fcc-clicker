@@ -1,5 +1,7 @@
-﻿FCC_MODES := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","Modes","")
+Max_Time := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","MaxTime",21600000)
+FCC_MODES := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","Modes","")
 lastpid := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ClickerPID",0)
+ConsoleDelay := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ConsoleDelay",0)
 if ProcessExist(lastpid)
 {
 choice:="."
@@ -11,12 +13,17 @@ choice:=MsgBox("FCClicker is running, kill it?","delphijustin FCCClicker","YesNo
 }
 if not (choice="Yes")
 ExitApp 2
-RegDelete
+RegDelete "HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ClickerPID"
 ProcessClose lastpid 
 }
 thispid:=ProcessExist()
 RegWrite thispid,"REG_DWORD","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ClickerPID"
+DllCall("AllocConsole") ; Allocate a console window
+ConsoleOut := FileOpen("CONOUT$", "w")
+ConsoleHandle := DllCall("GetConsoleWindow", "UInt")
+DllCall("SetConsoleTitle","Str","FCC is about to restart")
 loop:
+DllCall("User32\ShowWindow", "UInt", ConsoleHandle, "Int", 0) ; 0 = SW_HIDE
 fcc_dir := RegRead("HKEY_CURRENT_USER\SOFTWARE\FreeConferenceCall","InstallLocation")
 ;find the install path in the registry
 fcc_pid := ProcessExist("freeconferencecall.exe")
@@ -68,6 +75,11 @@ if InStr(FCC_MODES,"H")
 WinMinimize "FreeConferenceCall"
 ;minimizes FCC
 }
-Sleep 21600000
+Sleep Max_Time
 ;wait 6 hours. The usual limit for time on a meeting
+if (ConsoleDelay=0)
+goto loop
+DllCall("User32\ShowWindow", "UInt", ConsoleHandle, "Int", 5) ; 5 = SW_SHOW
+ConsoleOut.WriteLine(Format("[{:s}] In {:u} seconds FCC will restart...",FormatTime(, "Time"),ConsoleDelay))
+Sleep ConsoleDelay*1000
 goto loop
