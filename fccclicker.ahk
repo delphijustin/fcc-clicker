@@ -21,7 +21,6 @@ RegWrite thispid,"REG_DWORD","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","Cli
 DllCall("AllocConsole") ; Allocate a console window
 ConsoleOut := FileOpen("CONOUT$", "w")
 ConsoleHandle := DllCall("GetConsoleWindow", "UInt")
-DllCall("SetConsoleTitle","Str","FCC is about to restart")
 loop:
 try
 {
