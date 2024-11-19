@@ -12,8 +12,6 @@ Function AreAllCharsInString(source, target)
     AreAllCharsInString = 256
 End Function
 Dim wshshell
-dim actionCount
-actionCount=0
 set wshshell=WScript.CreateObject("WScript.Shell")
 Dim argCount
 Dim modes
