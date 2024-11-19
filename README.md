@@ -9,8 +9,12 @@ Examples of how to use setFCC.vbs:
 <p>
   Each mode is a letter or symbol passed to the command-line<br>
   For example to disable Noise reduction and minimize the window):<br>
-  setFCC.vbs NH<p>
-    even spaces can be put between the modes and it will still work
+  setFCC.vbs /modes:NH<p>
   </p>
-  To see all the modes execute setfcc.vbs with no parameters
+  To have enable a warning popup window when the app is about to restart FCC use the
+  /cdelay:seconds to specifiy a timeout in seconds. This will ensure that after that time
+  it will restart.
+</p>
+<p>
+  To see more on how to use setfcc.vbs open the file with no parameters.
 </p>
