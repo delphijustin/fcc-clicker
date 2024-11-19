@@ -26,7 +26,7 @@ if WScript.Arguments.Named.Exists("modes")then
 modes=WScript.Arguments.Named("modes")
 badchr=AreAllCharsInString(modes,"nhNHkK!")
 if badchr<256 then
-WScript.echo "'"&Chr(badchr)&"' charactor is not a valid mode."
+WScript.echo "'"&Chr(badchr)&"' character is not a valid mode."
 WScript.Quit 1
 end if
 if InStr(modes,"!")>0 then
