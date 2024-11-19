@@ -23,6 +23,8 @@ ConsoleOut := FileOpen("CONOUT$", "w")
 ConsoleHandle := DllCall("GetConsoleWindow", "UInt")
 DllCall("SetConsoleTitle","Str","FCC is about to restart")
 loop:
+try
+{
 DllCall("User32\ShowWindow", "UInt", ConsoleHandle, "Int", 0) ; 0 = SW_HIDE
 fcc_dir := RegRead("HKEY_CURRENT_USER\SOFTWARE\FreeConferenceCall","InstallLocation")
 ;find the install path in the registry
@@ -77,9 +79,16 @@ WinMinimize "FreeConferenceCall"
 }
 Sleep Max_Time
 ;wait 6 hours. The usual limit for time on a meeting
+}
+catch as e
+{
+DllCall("User32\ShowWindow", "UInt", ConsoleHandle, "Int", 5) ; 5 = SW_SHOW
+ConsoleOut.WriteLine("[" FormatTime() "] Exception: " e.message)
+Sleep 15000
+}
 if (ConsoleDelay=0)
 goto loop
 DllCall("User32\ShowWindow", "UInt", ConsoleHandle, "Int", 5) ; 5 = SW_SHOW
-ConsoleOut.WriteLine(Format("[{:s}] In {:u} seconds FCC will restart...",FormatTime(, "Time"),ConsoleDelay))
+ConsoleOut.WriteLine("[" FormatTime() "] In " ConsoleDelay " seconds FCC will restart...")
 Sleep ConsoleDelay*1000
 goto loop
