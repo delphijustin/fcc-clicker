@@ -16,7 +16,7 @@ Dim argCount
 Dim modes
 argCount = WScript.Arguments.Count
 If argCount = 0 Then
-WScript.Echo "Usage: setFCC.vbs <Modes>" & vbCrLf & "Modes:" & vbCrLf & "H     Minimizes the FCC window when done starting the conference" & vbCrLf & "N     Disables noise reduction:" & vbCrLf & "K     Autokill FCC if is running without asking" & vbCrLf & "!     Remove the current mode from the registry"
+WScript.Echo "Usage: setFCC.vbs <Modes>" & vbCrLf & "Modes:" & vbCrLf & "H     Minimizes the FCC window when done starting the conference" & vbCrLf & "N     Disables noise reduction" & vbCrLf & "K     Autokill FCC if is running without asking" & vbCrLf & "!     Remove the current mode from the registry"
 WScript.Quit 0
 end if
 modes=""
