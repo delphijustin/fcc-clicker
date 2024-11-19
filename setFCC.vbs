@@ -12,12 +12,14 @@ Function AreAllCharsInString(source, target)
     AreAllCharsInString = 256
 End Function
 Dim wshshell
+dim actionCount
+actionCount=0
 set wshshell=WScript.CreateObject("WScript.Shell")
 Dim argCount
 Dim modes
 argCount = WScript.Arguments.Count
 If argCount = 0 Then
-WScript.Echo "Usage: setFCC.vbs [/modes:Modes] [/cdelay:seconds]" & vbCrLf & "Modes:" & vbCrLf & "H     Minimizes the FCC window when done starting the conference" & vbCrLf & "N     Disables noise reduction" & vbCrLf & "K     Autokill FCC if is running without asking" & vbCrLf & "!     Remove the current modes from the registry" & vbCrLf  & vbCrLf & "/cdelay     Enables fcc restart warning console window to disable it set seconds to 0"
+WScript.Echo "Usage: setFCC.vbs [/modes:Modes] [/cdelay:seconds] [/maxtime:milliseconds]" & vbCrLf & "Modes:" & vbCrLf & "H     Minimizes the FCC window when done starting the conference" & vbCrLf & "N     Disables noise reduction" & vbCrLf & "K     Autokill FCC if is running without asking" & vbCrLf & "!     Remove the current modes from the registry" & vbCrLf  & vbCrLf & "/maxtime     Changes the default reset timeout, the default is 21600000 milliseconds(6 hours)" & vbCrLf & "/cdelay     Enables fcc restart warning console window to disable it set seconds to 0"
 WScript.Quit 0
 end if
 if WScript.Arguments.Named.Exists("modes")then
@@ -32,6 +34,13 @@ wshshell.RegWrite "HKEY_CURRENT_USER\Software\Justin\FCCClicker\Modes","","REG_S
 else
 wshshell.RegWrite "HKEY_CURRENT_USER\Software\Justin\FCCClicker\Modes",modes,"REG_SZ"
 end if
+end if
+if WScript.Arguments.Named.Exists("maxtime")then
+max_time=CInt(WScript.Arguments.Named("maxtime"))
+if max_time=0 then
+max_time=21600000
+end if
+wshshell.RegWrite "HKEY_CURRENT_USER\Software\Justin\FCCClicker\MaxTime",max_time,"REG_DWORD"
 end if
 if WScript.Arguments.Named.Exists("cdelay")then
 cdelay=CInt(WScript.Arguments.Named("cdelay"))
