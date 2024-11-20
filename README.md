@@ -14,4 +14,7 @@ Examples of how to use setFCC.vbs:
 <p>
   To see more on how to use setfcc.vbs open the file with no parameters.
 </p>
-A batch file that starts fcc client to my tv stream is included
+<p>
+  NOTE SOME ANTIVIRUS PROGRAMS MAY SAY IT HAS A VIRUS BUT ITS A FALSE ALARM
+</p>
+Watch TV https://www.freeconferencecall.com/wall/fcc037/
