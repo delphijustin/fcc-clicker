@@ -1,10 +1,4 @@
-<!doctype html>
-<html>
-<head>
-  <title>FCCClicker Readme</title>
-</head>
-<body>
-fcc-clicker
+# fcc-clicker
 A script that keeps your freeconferencecall.com conference active even after 6 hours
 <p>
   This script was created so I can stream my TV over the internet. I didn't like the
@@ -20,6 +14,4 @@ Examples of how to use setFCC.vbs:
 <p>
   To see more on how to use setfcc.vbs open the file with no parameters.
 </p>
-<a href="fcc://fcc037">Click here to watch TV</a>
-</body>
-</html>
+A batch file that starts fcc client to my tv stream is included
