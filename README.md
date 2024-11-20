@@ -11,10 +11,6 @@ Examples of how to use setFCC.vbs:
   For example to disable Noise reduction and minimize the window):<br>
   setFCC.vbs /modes:NH<p>
   </p>
-  To have enable a warning popup window when the app is about to restart FCC use the
-  /cdelay:seconds to specifiy a timeout in seconds. This will ensure that after that time
-  it will restart.
-</p>
 <p>
   To see more on how to use setfcc.vbs open the file with no parameters.
 </p>
