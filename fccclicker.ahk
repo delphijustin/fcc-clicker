@@ -1,7 +1,29 @@
+AboutBox(ItemName,ItemPos,MyMenu){
+DllCall("delphian32\DisplayAboutBoxA","UInt",0)
+}
+DonateClick(ItemName, ItemPos, MyMenu) {
+if InStr(ItemName,"PayPal")
+{
+DonError:=DllCall("delphian32.dll\Donate","Int",1,"UInt",0,"Int")
+if not(DonError=1)
+MsgBox "Donation failed to open(" DonError ")"
+return
+}
+if InStr(ItemName,"CashApp")
+{
+DonError:=DllCall("delphian32.dll\Donate","Int",2,"UInt",0,"Int")
+if not(DonError=1)
+MsgBox "Donation failed to open(" DonError ")"
+return
+}
+MsgBox "Unknown donation error"
+}
+A_TrayMenu.Add("About FCCClicker",AboutBox)
+A_TrayMenu.Add("Donate PayPal",DonateClick)
+A_TrayMenu.Add("Donate CashApp",DonateClick)
 Max_Time := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","MaxTime",21600000)
 FCC_MODES := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","Modes","")
 lastpid := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ClickerPID",0)
-ConsoleDelay := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ConsoleDelay",0)
 if ProcessExist(lastpid)
 {
 choice:="."
@@ -18,13 +40,7 @@ ProcessClose lastpid
 }
 thispid:=ProcessExist()
 RegWrite thispid,"REG_DWORD","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ClickerPID"
-DllCall("AllocConsole") ; Allocate a console window
-ConsoleOut := FileOpen("CONOUT$", "w")
-ConsoleHandle := DllCall("GetConsoleWindow", "UInt")
 loop:
-try
-{
-DllCall("User32\ShowWindow", "UInt", ConsoleHandle, "Int", 0) ; 0 = SW_HIDE
 fcc_dir := RegRead("HKEY_CURRENT_USER\SOFTWARE\FreeConferenceCall","InstallLocation")
 ;find the install path in the registry
 fcc_pid := ProcessExist("freeconferencecall.exe")
@@ -77,17 +93,4 @@ WinMinimize "FreeConferenceCall"
 ;minimizes FCC
 }
 Sleep Max_Time
-;wait 6 hours. The usual limit for time on a meeting
-}
-catch as e
-{
-DllCall("User32\ShowWindow", "UInt", ConsoleHandle, "Int", 5) ; 5 = SW_SHOW
-ConsoleOut.WriteLine("[" FormatTime() "] Exception: " e.message)
-Sleep 15000
-}
-if (ConsoleDelay=0)
-goto loop
-DllCall("User32\ShowWindow", "UInt", ConsoleHandle, "Int", 5) ; 5 = SW_SHOW
-ConsoleOut.WriteLine("[" FormatTime() "] In " ConsoleDelay " seconds FCC will restart...")
-Sleep ConsoleDelay*1000
 goto loop
