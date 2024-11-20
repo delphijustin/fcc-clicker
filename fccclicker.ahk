@@ -1,5 +1,6 @@
+#SingleInstance Off
 AboutBox(ItemName,ItemPos,MyMenu){
-DllCall("delphian32\DisplayAboutBoxA","UInt",0)
+DllCall("delphian32.dll\DisplayAboutBoxA","UInt",0,"Int",1)
 }
 DonateClick(ItemName, ItemPos, MyMenu) {
 if InStr(ItemName,"PayPal")
