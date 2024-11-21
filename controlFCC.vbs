@@ -1,3 +1,6 @@
+Option Explicit
+Dim keyExists,yKill
+keyExists = False
 Function AreAllCharsInString(source, target)
     Dim i, char
     For i = 1 To Len(source)
@@ -32,9 +35,20 @@ Function MillisecondsUntil(targetTime)
         MillisecondsUntil = secondsLeft * 1000
     End If
 End Function
+
+function ClickerStat
+On Error Resume Next ' Enable error handling
+' Try block
+Err.Clear
+objShell.RegRead "HKEY_CURRENT_USER\Software\Justin\FCCClicker\Memory\"
+isClickerInitialized = Err.Number
+Err.Clear
+On Error GoTo 0 ' Disable error handling
+end function
 function KillProcess(processID)
 KillProcess=1
 ' Create the WMI object
+dim objWMIService,colProcesses,objProcess
 Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
 
 ' Query for the process with the specified PID
@@ -56,10 +70,17 @@ Dim argCount
 Dim modes,minutes
 argCount = WScript.Arguments.Count
 If argCount = 0 Then
-WScript.Echo "Usage: controlfcc.vbs [/stop:WORD] ["&Chr(34)&"/record[:][hh:mm]]"&Chr(34)&" [/modes:Modes] [/maxtime:milliseconds]" & vbCrLf & "Modes:" & vbCrLf & "H     Minimizes the FCC window when done starting the conference" & vbCrLf & "N     Disables noise reduction" & vbCrLf & "K     Autokill FCC if is running without asking" & vbCrLf & "!     Remove the current modes from the registry" & vbCrLf  & vbCrLf & "/maxtime     Changes the default reset timeout, the default is 21600000 milliseconds(6 hours)" & vbCrLf & "/record    Start recording and keep recording until the time runs out. To end recording at a certain time make sure the time parameter contains AM or PM" & vbCrLf & "/stop    Stops Clicker and or Conference Call if WORD equals all if its ahk it stops the Clicker if its fcc it justs Stops the conference call"
+WScript.Echo "Usage: controlfcc.vbs [/stop:WORD] ["&Chr(34)&"/record[:hh:mm]]"&Chr(34)&" [/modes:Modes] [/maxtime:milliseconds]" & vbCrLf & "Modes:" & vbCrLf & "H     Minimizes the FCC window when done starting the conference" & vbCrLf & "N     Disables noise reduction" & vbCrLf & "K     Autokill FCC if is running without asking" & vbCrLf & "!     Remove the current modes from the registry" & vbCrLf  & vbCrLf & "/maxtime     Changes the default reset timeout, the default is 21600000 milliseconds(6 hours)" & vbCrLf & "/record    Start recording and keep recording until the time runs out. To end recording at a certain time make sure the time parameter contains AM or PM" & vbCrLf & "/stop    Stops Clicker and or Conference Call if WORD equals all if its ahk it stops the Clicker if its fcc it justs Stops the conference call"
 WScript.Quit 0
 end if
-wshshell.RegRead "HKEY_CURRENT_USER\Software\Justin\FCCClicker\Memory\"
+if not ClickerStat = 0 then
+WScript.echo "Please run fccclicker.exe first Error#"&ClickerStat
+WScript.Quit 1
+end if
+if not keyExists then
+WScript.Echo "FCCClicker session not avaliable, please start it with fccclicker.exe"
+WScript.Quit 0
+end if
 if WScript.Arguments.Named.Exists("stop") then
 ykill=0
 if InStr(WScript.Arguments.Named("stop"),"ahk")+InStr(WScript.Arguments.Named("stop"),"all")>0 then
