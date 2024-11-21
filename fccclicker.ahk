@@ -19,12 +19,38 @@ return
 }
 MsgBox "Unknown donation error"
 }
+Quit(ExitReason, ExitCode)
+{
+RegDelete "HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","ClickerPID"
+}
+OnExit Quit
+RegCreateKey "HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker"
+; Constants for RegCreateKeyEx
+HKEY_CURRENT_USER := 0x80000001
+REG_OPTION_VOLATILE := 1
+KEY_ALL_ACCESS := 0xF003F
+
+; Variables for the key
+keyPath := "Software\Justin\FCCClicker\Memory"
+phkResult := 0
+
+; Load the function
+vkeyError:=DllCall("Advapi32\RegCreateKeyExA", "UInt", HKEY_CURRENT_USER, "Str", keyPath
+    , "UInt", 0, "UInt", 0, "UInt", REG_OPTION_VOLATILE
+    , "UInt", KEY_ALL_ACCESS, "UInt", 0, "UInt*", phkResult, "UInt*", 0,"Int")
+if not (vkeyError=0)
+{
+MsgBox "Couldn't create volatile key. Aborting... Error#" vkeyError,"FCCClicker","iconx"
+ExitApp 1
+}
+DllCall("Advapi32\RegCloseKey", "UInt", phkResult)
+
 A_TrayMenu.Add("About FCCClicker",AboutBox)
 A_TrayMenu.Add("Donate PayPal",DonateClick)
 A_TrayMenu.Add("Donate CashApp",DonateClick)
 Max_Time := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","MaxTime",21600000)
 FCC_MODES := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","Modes","")
-lastpid := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ClickerPID",0)
+lastpid := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","ClickerPID",0)
 if ProcessExist(lastpid)
 {
 choice:="."
@@ -32,15 +58,15 @@ if InStr(FCC_MODES,"K")
 choice:="Yes"
 if (choice=".")
 {
-choice:=MsgBox("FCClicker is running, kill it?","delphijustin FCCClicker","YesNo")
+choice:=MsgBox("FCClicker is running, kill it?","delphijustin FCCClicker","YesNo Icon?")
 }
 if not (choice="Yes")
 ExitApp 2
-RegDelete "HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ClickerPID"
+RegDelete "HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","ClickerPID"
 ProcessClose lastpid 
 }
 thispid:=ProcessExist()
-RegWrite thispid,"REG_DWORD","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","ClickerPID"
+RegWrite thispid,"REG_DWORD","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","ClickerPID"
 loop:
 fcc_dir := RegRead("HKEY_CURRENT_USER\SOFTWARE\FreeConferenceCall","InstallLocation")
 ;find the install path in the registry
@@ -51,7 +77,7 @@ Run "FreeConferenceCall.exe",fcc_dir
 ;execute fcc
 ;wait for the program to load
 fcc_pid := ProcessExist("freeconferencecall.exe")
-RegWrite fcc_pid,"REG_DWORD","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","FCC_PID"
+RegWrite fcc_pid,"REG_DWORD","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","FCC_PID"
 WinWait "FreeConferenceCall"
 WinRestore "FreeConferenceCall"
 WinActivate "FreeConferenceCall"
