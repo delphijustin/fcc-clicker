@@ -23,6 +23,9 @@ Quit(ExitReason, ExitCode)
 {
 RegDelete "HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","ClickerPID"
 }
+try
+{
+
 OnExit Quit
 RegCreateKey "HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker"
 ; Constants for RegCreateKeyEx
@@ -51,6 +54,7 @@ A_TrayMenu.Add("Donate CashApp",DonateClick)
 Max_Time := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","MaxTime",21600000)
 FCC_MODES := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker","Modes","")
 lastpid := RegRead("HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","ClickerPID",0)
+
 if ProcessExist(lastpid)
 {
 choice:="."
@@ -68,6 +72,21 @@ ProcessClose lastpid
 thispid:=ProcessExist()
 RegWrite thispid,"REG_DWORD","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","ClickerPID"
 loop:
+whr := ComObject("WinHttp.WinHttpRequest.5.1")
+whr.Open("GET", "http://delphianserver.com/internetTest.txt?" A_TickCount, true)
+whr.Send()
+; Using 'true' above and the call below allows the script to remain responsive.
+whr.WaitForResponse()
+if (InStr(whr.ResponseText,"ERROR_SUCCESS",1)=1)
+{
+RegWrite "[OK]" A_Now,"REG_SZ","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","InternetSuccess"
+}
+else
+{
+RegWrite "[ERROR]" A_Now,"REG_SZ","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","InternetSuccess"
+Sleep 10240
+goto loop
+}
 fcc_dir := RegRead("HKEY_CURRENT_USER\SOFTWARE\FreeConferenceCall","InstallLocation")
 ;find the install path in the registry
 fcc_pid := ProcessExist("freeconferencecall.exe")
@@ -121,3 +140,10 @@ WinMinimize "FreeConferenceCall"
 }
 Sleep Max_Time
 goto loop
+}
+catch as e
+{
+RegWrite e.file "(" e.line "):" e.Message,"REG_SZ","HKEY_CURRENT_USER\SOFTWARE\Justin\FCCClicker\Memory","LastException"
+Sleep 2048
+}
+reload
