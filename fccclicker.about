@@ -1,9 +1,0 @@
-# About resource file
-# this must be manually added when recompiled
-# resource type ABOUT
-# resource id 1
-
-name=FreeConferenceCall Clicker
-Comments=Powered By AutoHotKey
-version=1.0
-AllowDonations
