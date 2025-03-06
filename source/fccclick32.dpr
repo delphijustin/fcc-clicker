@@ -314,6 +314,7 @@ tobject(@ifrun));
 commands.AddObject('close=Closes FCC process',tobject(@simpleahkdefault));
 commands.AddObject('chat=Send a chat message',tobject(@simpleahkdefault));
 commands.AddObject('kill=forces the fcc process to close',TObject(@killfcc));
+commands.AddObject('install=Installs fcc clicker',TObject(@instaLL));
 commands.AddObject('help=displays help',TObject(@Help));
 commands.AddObject('start=host a FCC Meeting',TObject(@startfcc));
 commands.AddObject('record=toggle record button',TObject(@simpleahk));
