@@ -51,7 +51,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=recordfor 00:00:04
+RunParams=
 HostApplication=
 Launcher=
 UseLauncher=0
